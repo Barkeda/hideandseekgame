@@ -2,6 +2,10 @@
 
 
 #include "AI.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
+#include "EnemyController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
 AAI::AAI()
@@ -16,6 +20,23 @@ void AAI::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Getting the AI controller 
+	EnemyController = Cast<AEnemyController>(GetController());
+
+	// Using UKismetMathLibrary to get access to the patrol point world location, so we can move it relative to the enemy character
+	FVector WorldPatrolPoint = UKismetMathLibrary::TransformLocation(GetActorTransform(), PatrolPoint);
+	// Draws a sphere around the Patrol point in the world
+	DrawDebugSphere(GetWorld(), WorldPatrolPoint, 25.f, 12, FColor::Red, true);
+
+	// Looking for a enemy controller is valid
+	if (EnemyController)
+	{
+		// Setting the vecotr value that was made in the Blackboard to match the values below
+		EnemyController->GetBlackboardComponent()->SetValueAsVector(TEXT("PatrolPoint"), WorldPatrolPoint);
+		// Makes the Behavior tree on the enemy accessable and able to do tasks with the blackboard
+		EnemyController->RunBehaviorTree(BehaviorTree);
+
+	}
 }
 
 // Called every frame

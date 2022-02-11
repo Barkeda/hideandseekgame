@@ -27,6 +27,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Behavior Tree", meta = (AllowPrivateAccess = "true"))
 		class UBehaviorTree* BehaviorTree;
 
+	/** Makes the enemy move to this point*/
+	UPROPERTY(EditAnywhere, Category = "Behavior Tree", meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
+	FVector PatrolPoint;
+
+	class AEnemyController* EnemyController;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
