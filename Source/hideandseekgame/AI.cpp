@@ -25,14 +25,21 @@ void AAI::BeginPlay()
 
 	// Using UKismetMathLibrary to get access to the patrol point world location, so we can move it relative to the enemy character
 	FVector WorldPatrolPoint = UKismetMathLibrary::TransformLocation(GetActorTransform(), PatrolPoint);
+
+	const FVector WorldPatrolPoint2 = UKismetMathLibrary::TransformLocation(GetActorTransform(), PatrolPoint2);
+
 	// Draws a sphere around the Patrol point in the world
 	DrawDebugSphere(GetWorld(), WorldPatrolPoint, 25.f, 12, FColor::Red, true);
+
+	// Draws a sphere around the Patrol point in the world
+	DrawDebugSphere(GetWorld(), WorldPatrolPoint2, 25.f, 12, FColor::Red, true);
 
 	// Looking for a enemy controller is valid
 	if (EnemyController)
 	{
 		// Setting the vecotr value that was made in the Blackboard to match the values below
 		EnemyController->GetBlackboardComponent()->SetValueAsVector(TEXT("PatrolPoint"), WorldPatrolPoint);
+		EnemyController->GetBlackboardComponent()->SetValueAsVector(TEXT("PatrolPoint2"), WorldPatrolPoint2);
 		// Makes the Behavior tree on the enemy accessable and able to do tasks with the blackboard
 		EnemyController->RunBehaviorTree(BehaviorTree);
 
