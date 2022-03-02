@@ -23,6 +23,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ServerBox")
 	class UBillboardComponent* Billboard;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Keycard")
+		class UStaticMeshComponent* KeyCard;
+
+	bool bPickupKeyCard;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

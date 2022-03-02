@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "PlayerCharacter.h"
 #include "Components/BillboardComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AServerItem::AServerItem()
@@ -17,6 +18,9 @@ AServerItem::AServerItem()
 
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 	Billboard->SetupAttachment(ServerBox);
+
+	KeyCard = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key Card"));
+	KeyCard->SetupAttachment(ServerBox);
 	
 	ServerBox->OnComponentBeginOverlap.AddDynamic(this, &AServerItem::OnOverlapBegin);
 	ServerBox->OnComponentEndOverlap.AddDynamic(this, &AServerItem::OnOverlapEnd);
@@ -29,7 +33,7 @@ void AServerItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	bPickupKeyCard = false;
 	
 }
 
