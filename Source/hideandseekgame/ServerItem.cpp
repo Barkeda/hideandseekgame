@@ -6,6 +6,7 @@
 #include "PlayerCharacter.h"
 #include "Components/BillboardComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "KeycardForServer.h"
 
 // Sets default values
 AServerItem::AServerItem()
@@ -19,12 +20,10 @@ AServerItem::AServerItem()
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 	Billboard->SetupAttachment(ServerBox);
 
-	KeyCard = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Key Card"));
-	KeyCard->SetupAttachment(ServerBox);
-	
 	ServerBox->OnComponentBeginOverlap.AddDynamic(this, &AServerItem::OnOverlapBegin);
 	ServerBox->OnComponentEndOverlap.AddDynamic(this, &AServerItem::OnOverlapEnd);
-
+	
+	ServerBox = false;
 
 }
 
@@ -33,8 +32,7 @@ void AServerItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	bPickupKeyCard = false;
-	
+
 }
 
 // Called every frame
@@ -46,11 +44,7 @@ void AServerItem::Tick(float DeltaTime)
 
 void AServerItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
-	if (OtherActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Server interacted with"));
-	}
+	
 }
 
 void AServerItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
