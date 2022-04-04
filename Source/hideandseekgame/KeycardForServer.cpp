@@ -31,6 +31,11 @@ void AKeycardForServer::BeginPlay()
 	
 }
 
+void AKeycardForServer::KeycardCollected()
+{
+	bKeycardIsCollected = true;
+}
+
 // Called every frame
 void AKeycardForServer::Tick(float DeltaTime)
 {
@@ -43,7 +48,7 @@ void AKeycardForServer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 	Destroy(true);
 	KeycardTrigger->SetVisibility(false);
 	UE_LOG(LogTemp, Warning, TEXT("You Got the keycard"));
-	bKeycardIsCollected = true;
+	KeycardCollected();
 
 }
 

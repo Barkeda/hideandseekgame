@@ -25,11 +25,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Keycard")
 	class UBoxComponent* KeycardTrigger;
 
-
+	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void KeycardCollected();
 
 	bool bKeycardIsCollected;
 

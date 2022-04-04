@@ -2,10 +2,9 @@
 
 
 #include "ServerItem.h"
-#include "Components/BoxComponent.h"
 #include "PlayerCharacter.h"
+#include "Components/BoxComponent.h"
 #include "Components/BillboardComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "KeycardForServer.h"
 
 // Sets default values
@@ -22,8 +21,8 @@ AServerItem::AServerItem()
 
 	ServerBox->OnComponentBeginOverlap.AddDynamic(this, &AServerItem::OnOverlapBegin);
 	ServerBox->OnComponentEndOverlap.AddDynamic(this, &AServerItem::OnOverlapEnd);
+
 	
-	ServerBox = false;
 
 }
 
@@ -32,7 +31,7 @@ void AServerItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	
 }
 
 // Called every frame
@@ -45,15 +44,13 @@ void AServerItem::Tick(float DeltaTime)
 void AServerItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("keycard Missing"));
 }
 
 void AServerItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
-	if (OtherActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Server End interact with"));
-	}
-	
 }
 
