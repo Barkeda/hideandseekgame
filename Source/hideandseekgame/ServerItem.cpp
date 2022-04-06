@@ -22,7 +22,6 @@ AServerItem::AServerItem()
 	ServerBox->OnComponentBeginOverlap.AddDynamic(this, &AServerItem::OnOverlapBegin);
 	ServerBox->OnComponentEndOverlap.AddDynamic(this, &AServerItem::OnOverlapEnd);
 
-	
 
 }
 
@@ -43,10 +42,17 @@ void AServerItem::Tick(float DeltaTime)
 
 void AServerItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+
+
+	//if (Keycard.bKeycardIsCollected == true)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("keycard inserted"));
+	//}
+	//else {
+	//	UE_LOG(LogTemp, Warning, TEXT("keycard Missing"));
+	//}
 
 	
-	UE_LOG(LogTemp, Warning, TEXT("keycard Missing"));
 }
 
 void AServerItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
