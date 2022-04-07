@@ -4,6 +4,7 @@
 #include "KeycardForServer.h"
 #include "Components/StaticmeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "PlayerCharacter.h"
 
 // Sets default values
 AKeycardForServer::AKeycardForServer()
@@ -31,10 +32,10 @@ void AKeycardForServer::BeginPlay()
 	
 }
 
-void AKeycardForServer::KeycardCollected()
-{
-	bKeycardIsCollected = true;
-}
+//void AKeycardForServer::KeycardCollected()
+//{
+//	bKeycardIsCollected = true;
+//}
 
 // Called every frame
 void AKeycardForServer::Tick(float DeltaTime)
@@ -45,10 +46,16 @@ void AKeycardForServer::Tick(float DeltaTime)
 
 void AKeycardForServer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Destroy(true);
-	KeycardTrigger->SetVisibility(false);
-	UE_LOG(LogTemp, Warning, TEXT("You Got the keycard"));
-	KeycardCollected();
+	APlayerCharacter* OtherCharacter = Cast<APlayerCharacter>(OtherActor);
+	if (OtherCharacter)
+	{
+		Keycard->SetVisibility(true);
+		KeycardTrigger->SetVisibility(false);
+		UE_LOG(LogTemp, Warning, TEXT("You Got the keycard"));
+		bKeycardIsCollected = true;
+		//KeycardCollected();
+	}
+	
 
 }
 

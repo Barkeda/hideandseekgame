@@ -30,6 +30,9 @@ protected:
 
 	
 public:	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "KeycardItems")
+	TArray<KeycardItem> Keycards;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

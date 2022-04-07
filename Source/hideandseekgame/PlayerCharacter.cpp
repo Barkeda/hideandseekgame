@@ -17,8 +17,6 @@ APlayerCharacter::APlayerCharacter()
 	// character turns with camera, so we don't break it's neck while looking backwards
 	headCamera->bUsePawnControlRotation = true;
 
-
-
 }
 
 // Called when the game starts or when spawned
