@@ -19,11 +19,6 @@ AServerItem::AServerItem()
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 	Billboard->SetupAttachment(ServerBox);
 
-	ServerBox->OnComponentBeginOverlap.AddDynamic(this, &AServerItem::OnOverlapBegin);
-	ServerBox->OnComponentEndOverlap.AddDynamic(this, &AServerItem::OnOverlapEnd);
-
-	bKeycardIsCollected = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -41,34 +36,4 @@ void AServerItem::Tick(float DeltaTime)
 
 }
 
-void AServerItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	APlayerCharacter* OtherCharacter = Cast<APlayerCharacter>(OtherActor);
-	if (OtherCharacter)
-	{
-		if (!bKeycardIsCollected)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("keycard Missing"));
-			
-		}
-		else if(bKeycardIsCollected)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("keycard inserted"));
-		}
-	}
-	//if (Keycard.bKeycardIsCollected == true)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("keycard inserted"));
-	//}
-	//else {
-	//	UE_LOG(LogTemp, Warning, TEXT("keycard Missing"));
-	//}
-
-	
-}
-
-void AServerItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-
-}
 

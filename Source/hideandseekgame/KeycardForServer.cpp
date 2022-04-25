@@ -18,11 +18,6 @@ AKeycardForServer::AKeycardForServer()
 	KeycardTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Key Card trigger"));
 	KeycardTrigger->SetupAttachment(Keycard);
 
-	KeycardTrigger->OnComponentBeginOverlap.AddDynamic(this, &AKeycardForServer::OnOverlapBegin);
-	KeycardTrigger->OnComponentEndOverlap.AddDynamic(this, &AKeycardForServer::OnOverlapEnd);
-
-	bKeycardIsCollected = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -32,10 +27,6 @@ void AKeycardForServer::BeginPlay()
 	
 }
 
-//void AKeycardForServer::KeycardCollected()
-//{
-//	bKeycardIsCollected = true;
-//}
 
 // Called every frame
 void AKeycardForServer::Tick(float DeltaTime)
@@ -44,22 +35,5 @@ void AKeycardForServer::Tick(float DeltaTime)
 
 }
 
-void AKeycardForServer::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	APlayerCharacter* OtherCharacter = Cast<APlayerCharacter>(OtherActor);
-	if (OtherCharacter)
-	{
-		Keycard->SetVisibility(true);
-		KeycardTrigger->SetVisibility(false);
-		UE_LOG(LogTemp, Warning, TEXT("You Got the keycard"));
-		bKeycardIsCollected = true;
-		//KeycardCollected();
-	}
-	
 
-}
-
-void AKeycardForServer::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
 
