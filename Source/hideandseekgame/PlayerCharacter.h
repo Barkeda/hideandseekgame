@@ -16,7 +16,10 @@ public:
 	APlayerCharacter();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Camera")
-	class UCameraComponent* headCamera;
+	class UCameraComponent* HeadCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
+	class USkeletalMeshComponent* GunSlotComp;
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +31,10 @@ protected:
 	/** right / left movement input */
 	void MoveRight(float value);
 
+	/** Called when the fire button is pressed*/
+	void FireWeapon();
 	
+
 public:	
 
 
@@ -37,5 +43,16 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+private:
+
+	/** Rifle sound cue*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	class USoundCue* FireSound;
+
+	/** muzzle flash effect spawned at barrel socket*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	class UParticleSystem* Muzzleflash;
 
 };

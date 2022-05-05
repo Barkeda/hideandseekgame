@@ -3,6 +3,9 @@
 
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -11,12 +14,14 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Camera that we see through as the character
-	headCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	HeadCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	// Attaches the camera to the characters head, so it don't glitch with the rest of the body since the character got a head with an attached camera
-	headCamera->SetupAttachment(GetMesh(), FName("head"));
+	HeadCamera->SetupAttachment(GetMesh(), FName("head"));
 	// character turns with camera, so we don't break it's neck while looking backwards
-	headCamera->bUsePawnControlRotation = true;
+	HeadCamera->bUsePawnControlRotation = true;
 
+	GunSlotComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Slot"));
+	GunSlotComp->SetupAttachment(GetMesh(), FName("weapon_socket"));
 }
 
 // Called when the game starts or when spawned
@@ -51,6 +56,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
+	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &APlayerCharacter::FireWeapon);
+
 }
 
 void APlayerCharacter::MoveForward(float value)
@@ -61,5 +68,28 @@ void APlayerCharacter::MoveForward(float value)
 void APlayerCharacter::MoveRight(float value)
 {
 	AddMovementInput(GetActorRightVector() * value);
+}
+
+void APlayerCharacter::FireWeapon()
+{
+	// Making sure the fire sound is valid
+	if (FireSound)
+	{
+		// Fetching the playsound from the gameplaystatics lib and makes sure teh character is the one using the fire sound 
+		UGameplayStatics::PlaySound2D(this, FireSound);
+	}
+	// Making it const since it should not be changed
+	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("Barrel_Socket");
+	// Making sure there is a barrel socket attached
+	if (BarrelSocket)
+	{
+		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
+
+		// Making sure there is a muzzleflash attached for nullptr exception
+		if (Muzzleflash)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Muzzleflash, SocketTransform);
+		}
+	}
 }
 
