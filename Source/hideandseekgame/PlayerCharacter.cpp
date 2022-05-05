@@ -6,9 +6,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
-APlayerCharacter::APlayerCharacter()
+APlayerCharacter::APlayerCharacter() :
+
+	bAiming(false)
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -57,7 +61,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &APlayerCharacter::FireWeapon);
-
+	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, &APlayerCharacter::AimingButtonPressed);
+	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, &APlayerCharacter::AimingButtonReleased);
 }
 
 void APlayerCharacter::MoveForward(float value)
@@ -90,6 +95,73 @@ void APlayerCharacter::FireWeapon()
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Muzzleflash, SocketTransform);
 		}
+
+		// Gettting the current size of the viewport
+		FVector2D ViewportSize;
+		// GEngine is what holds the viewport so it can be accessed as a reference point for the trace
+		if (GEngine && GEngine->GameViewport)
+		{
+			// Fits the viewport to what screen size that gets used
+			GEngine->GameViewport->GetViewportSize(ViewportSize);
+		}
+
+		// Get screen space location of crosshair
+		FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+		FVector CrosshairWorldPosition;
+		FVector CrosshairWorldDirection;
+
+		// Finding the position and direction of the crosshair in world space (View Space)
+		bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(this, 0), CrosshairLocation, CrosshairWorldPosition, CrosshairWorldDirection);
+		
+		// Checking if the deprojection was a success
+		if (bScreenToWorld)
+		{
+			FHitResult ScreenTraceHit;
+			const FVector Start{ CrosshairWorldPosition };
+			const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * 50'000.f };
+
+			// Tracing out from the crosshair world location
+			GetWorld()->LineTraceSingleByChannel(ScreenTraceHit, Start, End, ECollisionChannel::ECC_Visibility);
+
+			// did the trace hit something
+			if (ScreenTraceHit.bBlockingHit)
+			{
+				// if we have an impact particle, and it hits somehting, then spawn it at the collision area+
+				if (ImpactParticles)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, ScreenTraceHit.Location);
+				}
+			}
+		}
+
+		/*FHitResult FireHit;
+		const FVector Start{ SocketTransform.GetLocation() };
+		const FQuat Rotation{ SocketTransform.GetRotation() };
+		const FVector RotationAxis{ Rotation.GetAxisX() };
+		const FVector End{ Start + RotationAxis * 50'000.f };
+
+		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
+		if (FireHit.bBlockingHit)
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+
+			if (ImpactParticles)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.Location);
+			}
+
+		}*/
 	}
+}
+
+void APlayerCharacter::AimingButtonPressed()
+{
+	bAiming = true;
+}
+
+void APlayerCharacter::AimingButtonReleased()
+{
+	bAiming = false;
 }
 

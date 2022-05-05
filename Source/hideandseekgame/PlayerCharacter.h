@@ -34,6 +34,10 @@ protected:
 	/** Called when the fire button is pressed*/
 	void FireWeapon();
 	
+	/**Set bAiming to true or false depending on button pressed or released*/
+	void AimingButtonPressed();
+	void AimingButtonReleased();
+
 
 public:	
 
@@ -54,5 +58,12 @@ private:
 	/** muzzle flash effect spawned at barrel socket*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UParticleSystem* Muzzleflash;
+
+	/** Particles spawned upon bullet impact*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		UParticleSystem* ImpactParticles;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bAiming; 
 
 };
