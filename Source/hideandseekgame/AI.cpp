@@ -13,6 +13,9 @@ AAI::AAI()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GunSlotComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Slot"));
+	GunSlotComp->SetupAttachment(GetMesh(), FName("weapon_socket"));
+
 }
 
 // Called when the game starts or when spawned
@@ -20,6 +23,9 @@ void AAI::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Makes it possible to hit the enemy with the Line trace
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+
 	// Getting the AI controller 
 	EnemyController = Cast<AEnemyController>(GetController());
 
@@ -37,7 +43,7 @@ void AAI::BeginPlay()
 	// Looking for a enemy controller is valid
 	if (EnemyController)
 	{
-		// Setting the vecotr value that was made in the Blackboard to match the values below
+		// Setting the vector value that was made in the Blackboard to match the values below
 		EnemyController->GetBlackboardComponent()->SetValueAsVector(TEXT("PatrolPoint"), WorldPatrolPoint);
 		EnemyController->GetBlackboardComponent()->SetValueAsVector(TEXT("PatrolPoint2"), WorldPatrolPoint2);
 		// Makes the Behavior tree on the enemy accessable and able to do tasks with the blackboard
@@ -57,6 +63,11 @@ void AAI::Tick(float DeltaTime)
 void AAI::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+}
+
+void AAI::BulletHit_Implementation(FHitResult HitResult)
+{
 
 }
 
