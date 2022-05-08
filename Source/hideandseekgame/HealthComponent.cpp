@@ -31,15 +31,23 @@ void UHealthComponent::BeginPlay()
 // This HandleTakeAnyDamage is form a lib inside the engine
 void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (Damage <= 0)
+	if (Damage <= 0.f)
 	{
-		return;
+		Death();
 	}
 
 	// Updated health clamped so it can't go beneath zero
 	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
 
 	UE_LOG(LogTemp, Warning, TEXT("you are losing health: %s"), *FString::SanitizeFloat(Health));
+
+	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
+}
+
+
+void UHealthComponent::Death()
+{
+
 }
 
 

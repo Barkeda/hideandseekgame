@@ -25,4 +25,5 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void BulletHit(FHitResult HitResult);
+
 };

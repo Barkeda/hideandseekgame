@@ -21,6 +21,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
 	class USkeletalMeshComponent* GunSlotComp;
 
+
 protected:
 
 	// Called when the game starts or when spawned
@@ -39,6 +40,15 @@ protected:
 	void AimingButtonPressed();
 	void AimingButtonReleased();
 
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	//class TSubclassOf<UDamageType>DamageType;
+
+	UFUNCTION()
+	void OnHealthChanged(UHealthComponent* HealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	/** Player is dead*/
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDead;
 
 public:	
 
@@ -49,6 +59,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	float DamageAmount;
 
 private:
 
@@ -66,5 +77,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool bAiming; 
+
+
+
 
 };

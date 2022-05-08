@@ -7,11 +7,15 @@
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "DrawDebugHelpers.h"
+#include "HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() :
 
-	bAiming(false)
+	bAiming(false),
+	DamageAmount(15.f)
 
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -26,13 +30,16 @@ APlayerCharacter::APlayerCharacter() :
 
 	GunSlotComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Slot"));
 	GunSlotComp->SetupAttachment(GetMesh(), FName("weapon_socket"));
+
+
 }
 
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+
 }
 
 // Called every frame
@@ -47,7 +54,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Set up gameplay key bindings
+	// Set up game play key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -80,7 +87,7 @@ void APlayerCharacter::FireWeapon()
 	// Making sure the fire sound is valid
 	if (FireSound)
 	{
-		// Fetching the playsound from the gameplaystatics lib and makes sure teh character is the one using the fire sound 
+		// Fetching the play sound from the gameplay statics lib and makes sure teh character is the one using the fire sound 
 		UGameplayStatics::PlaySound2D(this, FireSound);
 	}
 	// Making it const since it should not be changed
@@ -90,13 +97,13 @@ void APlayerCharacter::FireWeapon()
 	{
 		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
 
-		// Making sure there is a muzzleflash attached for nullptr exception
+		// Making sure there is a muzzle flash attached for nullptr exception
 		if (Muzzleflash)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Muzzleflash, SocketTransform);
 		}
 
-		// Gettting the current size of the viewport
+		// Getting the current size of the viewport
 		FVector2D ViewportSize;
 		// GEngine is what holds the viewport so it can be accessed as a reference point for the trace
 		if (GEngine && GEngine->GameViewport)
@@ -113,7 +120,7 @@ void APlayerCharacter::FireWeapon()
 		// Finding the position and direction of the crosshair in world space (View Space)
 		bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(this, 0), CrosshairLocation, CrosshairWorldPosition, CrosshairWorldDirection);
 		
-		// Checking if the deprojection was a success
+		// Checking if the de-projection was a success
 		if (bScreenToWorld)
 		{
 			FHitResult ScreenTraceHit;
@@ -126,11 +133,15 @@ void APlayerCharacter::FireWeapon()
 			// did the trace hit something
 			if (ScreenTraceHit.bBlockingHit)
 			{
-				// if we have an impact particle, and it hits somehting, then spawn it at the collision area+
+				// if we have an impact particle, and it hits something, then spawn it at the collision area+
 				if (ImpactParticles)
 				{
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, ScreenTraceHit.Location);
 				}
+
+				AActor* HitActor = ScreenTraceHit.GetActor();
+
+			/*	UGameplayStatics::ApplyDamage(HitActor, DamageAmount, GetInstigatorController(), this, );*/
 			}
 		}
 
@@ -163,5 +174,18 @@ void APlayerCharacter::AimingButtonPressed()
 void APlayerCharacter::AimingButtonReleased()
 {
 	bAiming = false;
+}
+
+void APlayerCharacter::OnHealthChanged(UHealthComponent* HealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.f && !bDead)
+	{
+		//Die
+		bDead = true;
+		GetMovementComponent()->StopMovementImmediately(); // Make it so character can't move around when dead
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Makes sure things can just walk through the capsule surrounding the mesh when character is dead
+
+		
+	}
 }
 

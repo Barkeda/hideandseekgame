@@ -5,16 +5,26 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "EnemyController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Components/CapsuleComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "HealthComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
-AAI::AAI()
+AAI::AAI() :
+	DamageAmount(15.f)
+
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GunSlotComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Slot"));
 	GunSlotComp->SetupAttachment(GetMesh(), FName("weapon_socket"));
+
+	//HealthComponent->CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
 
 }
 
@@ -52,6 +62,19 @@ void AAI::BeginPlay()
 	}
 }
 
+// Lets play the animations that are setup inside the engine
+void AAI::PlayDamageMontage(FName Section, float PlayRate)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Play(DamageMontage, PlayRate);
+		AnimInstance->Montage_JumpToSection(Section, DamageMontage);
+	}
+}
+
+
+
 // Called every frame
 void AAI::Tick(float DeltaTime)
 {
@@ -68,6 +91,17 @@ void AAI::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AAI::BulletHit_Implementation(FHitResult HitResult)
 {
-
+	// Making sure Impact sound is not a null pointer 
+	if (ImpactSound)
+	{
+		// Make a sound where the bullet hit a target
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
+	}
+	if (ImpactParticels)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticels, HitResult.Location, FRotator(0.f), true);
+	}
+	
+	PlayDamageMontage(FName("HitReact1"));
 }
 

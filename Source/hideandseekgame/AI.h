@@ -8,7 +8,7 @@
 #include "AI.generated.h"
 
 UCLASS()
-class HIDEANDSEEKGAME_API AAI : public ACharacter, IBulletHitInterface
+class HIDEANDSEEKGAME_API AAI : public ACharacter, public IBulletHitInterface
 {
 	GENERATED_BODY()
 
@@ -32,6 +32,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class USoundCue* ImpactSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+		class TSubclassOf<UDamageType>DamageType;
+
+	//class UHealthComponent* HealthComponent;
+
+	float DamageAmount;
+
+	void PlayDamageMontage(FName Section, float PlayRate = 1.0f);
+
 private:
 
 
@@ -50,6 +59,11 @@ private:
 	class AEnemyController* EnemyController;
 
 
+	/**Montage that contains when damaged and death animations*/
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DamageMontage;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -59,8 +73,6 @@ public:
 
 	virtual void BulletHit_Implementation(FHitResult HitResult) override;
 
-
-public:
 
 	FORCEINLINE UBehaviorTree* GetBehaviorTree() const { return BehaviorTree; }
 };
