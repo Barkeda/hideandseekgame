@@ -7,7 +7,7 @@
 #include "HealthComponent.generated.h"
 
 // On Health change event
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_SixParams(FOnHealthChanged, UHealthComponent*, HealthComp, float, Health, float, HealthDelta, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_SixParams(FOnHealthChanged, UHealthComponent*, OwningHealthComp, float, Health, float, HealthDelta, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HIDEANDSEEKGAME_API UHealthComponent : public UActorComponent
@@ -22,6 +22,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	bool bDied;
+
+
 	/** Health Component*/
 	UPROPERTY(BlueprintReadOnly, Category = "HealthComponent", meta = (AllowPrivateAccess = "true"))
 	float Health;
@@ -32,8 +35,6 @@ protected:
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
-
-	void Death();
 
 public:
 	

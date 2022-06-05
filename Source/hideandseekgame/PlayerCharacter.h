@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "SWeapon.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -18,9 +19,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Camera")
 	class UCameraComponent* HeadCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
-	class USkeletalMeshComponent* GunSlotComp;
-
 
 protected:
 
@@ -32,26 +30,22 @@ protected:
 
 	/** right / left movement input */
 	void MoveRight(float value);
-
-	/** Called when the fire button is pressed*/
-	void FireWeapon();
 	
 	/**Set bAiming to true or false depending on button pressed or released*/
 	void AimingButtonPressed();
 	void AimingButtonReleased();
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	//class TSubclassOf<UDamageType>DamageType;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UHealthComponent* HealthComp;
 
 	UFUNCTION()
-	void OnHealthChanged(UHealthComponent* HealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
-
-	/** Player is dead*/
-	UPROPERTY(BlueprintReadOnly, Category = "Player")
-	bool bDead;
+	void OnHealthChanged(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 public:	
 
+	float PlayerHealth;
+
+	float PlayerMaxHealth;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -59,25 +53,34 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	float DamageAmount;
+	/** Returns	Pawn's eye location */
+	virtual FVector GetPawnViewLocation() const override;
+
+
+
+	class ASWeapon* CurrentWeapon;
+
+	void StartFire();
+
+	void StopFire();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	TSubclassOf<ASWeapon> StarterWeaponClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName WeaponAttachSocketName;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 private:
-
-	/** Rifle sound cue*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	class USoundCue* FireSound;
-
-	/** muzzle flash effect spawned at barrel socket*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	class UParticleSystem* Muzzleflash;
-
-	/** Particles spawned upon bullet impact*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-		UParticleSystem* ImpactParticles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool bAiming; 
 
+	/**Montage for character death*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	class UAnimMontage* DeathMontage;
 
 
 

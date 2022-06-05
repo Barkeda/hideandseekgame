@@ -32,7 +32,7 @@ private:
 	class APlayerCharacter* PlayerCharacter;
 
 	/** The speed of the character*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float Speed;
 
 	/**Is the character in the air when called*/
