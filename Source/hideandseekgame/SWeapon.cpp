@@ -19,6 +19,8 @@ ASWeapon::ASWeapon()
 
 	RateOfFire = 600;
 
+	BulletSpread = 2.f;
+
 }
 
 void ASWeapon::BeginPlay()
@@ -42,6 +44,11 @@ void ASWeapon::Fire()
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
 		FVector ShotDirection = EyeRotation.Vector();
+
+		// Bullet Spread
+		// makes a half cone spread vertical and horizontal
+		float HalfRad = FMath::DegreesToRadians(BulletSpread);
+		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
 
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10'000);
 

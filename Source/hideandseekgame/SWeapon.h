@@ -60,5 +60,9 @@ protected:
 	/**Derived from rate of fire*/
 	float TimeBetweenShots;
 
+	/**Bullet spread in degrees*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
+	float BulletSpread;
+
 
 };

@@ -60,8 +60,10 @@ public:
 
 	class ASWeapon* CurrentWeapon;
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
 	void StartFire();
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
 	void StopFire();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
