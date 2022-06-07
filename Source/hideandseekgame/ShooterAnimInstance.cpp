@@ -17,7 +17,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		// Get the speed of the character from velocity
 		FVector Velocity{ PlayerCharacter->GetVelocity() };
 		// making sure the character don't drift upwards 
-		Velocity.Z = 0;
+		Velocity.Z = 0.f;
 		Speed = Velocity.Size();
 
 		// Is the character in the air? (include characterMovementComponent)
