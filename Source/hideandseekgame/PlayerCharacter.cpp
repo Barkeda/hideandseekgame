@@ -154,8 +154,10 @@ void APlayerCharacter::OnHealthChanged(UHealthComponent* OwningHealthComp, float
 			DetachFromControllerPendingDestroy();
 
 			SetLifeSpan(10.0f);
+
+			StopFire();
 		}
 	
 }
 
-
+	

@@ -64,7 +64,7 @@ void ASWeapon::Fire()
 			// Blocking hit process damage
 			AActor* HitActor = Hit.GetActor();
 
-			UGameplayStatics::ApplyPointDamage(HitActor, 10.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
+			UGameplayStatics::ApplyPointDamage(HitActor, 10.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), MyOwner, DamageType);
 
 			if (ImpactEffect)
 			{

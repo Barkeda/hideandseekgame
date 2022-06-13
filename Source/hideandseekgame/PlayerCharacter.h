@@ -57,7 +57,7 @@ public:
 	virtual FVector GetPawnViewLocation() const override;
 
 
-
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	class ASWeapon* CurrentWeapon;
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
