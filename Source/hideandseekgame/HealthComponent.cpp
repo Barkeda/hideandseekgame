@@ -29,6 +29,11 @@ void UHealthComponent::BeginPlay()
 	Health = DefaultHealth;
 }
 
+float UHealthComponent::GetHealthPercent() const
+{
+	return Health / DefaultHealth;
+}
+
 
 
 // This HandleTakeAnyDamage is form a lib inside the engine

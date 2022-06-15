@@ -27,6 +27,8 @@ protected:
 
 	bool bDied;
 
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercent() const;
 
 	/** Health Component*/
 	UPROPERTY(BlueprintReadOnly, Category = "HealthComponent", meta = (AllowPrivateAccess = "true"))

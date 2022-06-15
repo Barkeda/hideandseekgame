@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SWeapon.generated.h"
 
+class UParticleSystem;
 
 UCLASS()
 class HIDEANDSEEKGAME_API ASWeapon : public AActor
@@ -21,6 +22,7 @@ public:
 
 	void StopFire();
 
+	void Fire();
 
 protected:
 
@@ -40,15 +42,18 @@ protected:
 
 	/** muzzle flash effect spawned at barrel socket*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-		class UParticleSystem* Muzzleflash;
+		UParticleSystem* Muzzleflash;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		UParticleSystem* ImpactEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+		UParticleSystem* FleshImpactEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 		class USoundCue* ImpactSound;
 
-	void Fire();
+
 
 	FTimerHandle TimerHandle_TimeBetweenShots;
 
