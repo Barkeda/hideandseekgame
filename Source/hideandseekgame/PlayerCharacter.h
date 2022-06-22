@@ -36,7 +36,7 @@ protected:
 	void AimingButtonReleased();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-		UHealthComponent* HealthComp;
+	class	UHealthComponent* HealthComp;
 
 	UFUNCTION()
 	void OnHealthChanged(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -56,8 +56,6 @@ public:
 	/** Returns	Pawn's eye location */
 	virtual FVector GetPawnViewLocation() const override;
 
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	class ASWeapon* CurrentWeapon;
 
 	UFUNCTION(BlueprintCallable, Category = "Player")

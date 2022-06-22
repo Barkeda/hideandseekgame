@@ -75,8 +75,10 @@ void ASWeapon::Fire()
 
 			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 
+			// the effect start with being nothing
 			UParticleSystem* SelectedEffect = nullptr;
 
+			// Selects the surface effect called, when hitting specific object 
 			switch (SurfaceType)
 			{
 			case SURFACE_FLESHDEFAULT:

@@ -35,9 +35,11 @@ APlayerCharacter::APlayerCharacter()
 
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
 
+	// Not implemented
 	bAiming = false;
 	bDied = false;
 
+	// Player base health and max health
 	PlayerHealth = 100.f;
 	PlayerMaxHealth = 100.f;
 }
@@ -95,7 +97,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 
 }
-
+// Makes sure the camera look the way I want
 FVector APlayerCharacter::GetPawnViewLocation() const
 {
 	if (HeadCamera)
@@ -105,6 +107,7 @@ FVector APlayerCharacter::GetPawnViewLocation() const
 	return Super::GetPawnViewLocation();
 }
 
+// Called when i want to start fire weapon
 void APlayerCharacter::StartFire()
 {
 	if (CurrentWeapon)
@@ -112,7 +115,7 @@ void APlayerCharacter::StartFire()
 		CurrentWeapon->StartFire();
 	}
 }
-
+// Called when i want to stop fire weapon
 void APlayerCharacter::StopFire()
 {
 	if (CurrentWeapon)
@@ -143,6 +146,7 @@ void APlayerCharacter::AimingButtonReleased()
 	bAiming = false;
 }
 
+// Called when anything happens to the players health 
 void APlayerCharacter::OnHealthChanged(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 		if (Health <= 0.f && !bDied)
